@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    image: node:14
+    container_name: DuolinGang
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000" # 将主机的 3000 端口映射到容器的 3000 端口
+    command: npm start
+    environment:
+      - NODE_ENV=development
+
+  mongo:
+    image: mongo:4.4
+    container_name: my_mongo_db
+    ports:
+      - "27017:27017" # 将主机的 27017 端口映射到容器的 27017 端口
+    volumes:
+      - mongo_data:/data/db # 持久化 MongoDB 数据
+
+volumes:
+  mongo_data:
