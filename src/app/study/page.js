@@ -1,37 +1,77 @@
 'use client';
-import WordScatter from '../components/WordScatter';
-import React, { useEffect, useState } from 'react';
 
-export default function Home() {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+import Button from "../components/eldoraui/button";
+import { useState, useEffect } from 'react';
 
+export default function StudyPage() {
+    const [wordsData, setWordsData] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [showAnswer, setShowAnswer] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+  
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('/api/getData');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const result = await response.json();
-                setData(result);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
+      const fetchRandomWords = async () => {
+        try {
+          const limit = 5;
+          
+          const response = await fetch(`/api/randomwords?limit=${limit}`);
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch words');
+          }
+          
+          const data = await response.json();
+          setWordsData(data);
+        } catch (error) {
+          console.error("Error:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      fetchRandomWords();
     }, []);
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
+  
+    const handleCardClick = () => {
+      if (!showAnswer) {
+        setShowAnswer(true);
+      } else {
+        setShowAnswer(false);
+        setCurrentIndex((prevIndex) => 
+          prevIndex === wordsData.length - 1 ? 0 : prevIndex + 1
+        );
+      }
+    };
+  
+    if (isLoading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (!wordsData.length) {
+      return <div>No words found</div>;
+    }
+  
+    const currentWord = wordsData[currentIndex];
+  
     return (
-        <main>
-            <WordScatter data={data} />
-        </main>
+      <div className="word-card-container">
+        <Button className="word-card" onClick={handleCardClick}  variant="brutal" >
+          {!showAnswer ? (
+            <div className="meaning">
+              <p>{currentWord.meaning}</p>
+              <p>Click to show answer</p>
+            </div>
+          ) : (
+            <div className="answer">
+              <p className="word">{currentWord.word}</p>
+              <p className="pinyin">{currentWord.pinyin}</p>
+              <p>Click for next word</p>
+            </div>
+          )}
+        </Button>
+        <div className="progress">
+          {currentIndex + 1} / {wordsData.length}
+        </div>
+      </div>
     );
-}
+  }

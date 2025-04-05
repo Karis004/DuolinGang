@@ -2,10 +2,10 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const Table = React.forwardRef(({ className, ...props }, ref) => (
-    <div className="relative w-[80vw] h-[70vh] max-w-[320px] overflow-auto border-2 border-black bg-white p-4 transition-all dark:border-white dark:bg-zinc-800 shadow-[4px_4px_0_0_#000] hover:shadow-none">
+    <div className="relative w-[80vw] h-[70vh] max-w-[350px] overflow-auto border-2 border-black bg-white p-4 transition-all dark:border-white dark:bg-zinc-800 shadow-[4px_4px_0_0_#000] hover:shadow-none">
         <table
             ref={ref}
-            className={cn("w-[70vw] max-w-[265px] caption-bottom", className)}
+            className={cn("caption-bottom", className)}
             {...props}
         />
     </div>
