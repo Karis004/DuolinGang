@@ -26,4 +26,12 @@ const BlackDiv = React.forwardRef(({ className, ...props }, ref) => (
 ));
 BlackDiv.displayName = "BlackDiv";
 
-export { Base, RedDiv, BlackDiv };  
+const Panel = React.forwardRef(({ className, ...props }, ref) => (
+    <div className="flex flex-col w-[85vw] max-w-[450px] h-[70vh] overflow-auto border-2 border-black bg-white py-4 px-4 transition-all shadow-[4px_4px_0_0_#000] hover:shadow-none"
+        ref={ref}
+        {...props}>
+    </div>
+));
+Panel.displayName = "Panel";
+
+export { Base, RedDiv, BlackDiv, Panel };  
