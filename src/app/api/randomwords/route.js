@@ -13,10 +13,12 @@ export async function GET(request) {
 
     const data = await collection.find(filter, {
       projection: {
-        _id: 0,
+        _id: 1,
         pinyin: 1,
         word: 1,
         meaning: 1,
+        meanings: 1,
+        examples: 1,
         times: 1
       }
     }).toArray();
@@ -25,12 +27,21 @@ export async function GET(request) {
     data.sort((a, b) => a.times - b.times);
     const totalTimes = data.reduce((sum, item) => sum + item.times, 0);
     const randomData = data.filter(item => Math.random() * totalTimes >= item.times).slice(0, limit);
-    
+
     // Fisher-Yates 洗牌算法
     for (let i = randomData.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [randomData[i], randomData[j]] = [randomData[j], randomData[i]];
     }
+
+    const updatePromises = randomData.map(item =>
+      collection.updateOne(
+        { _id: item._id },
+        { $inc: { times: 1 } }, // times属性加1
+        { upsert: false }
+      )
+    );
+    await Promise.all(updatePromises);
 
     return Response.json(randomData);
   } catch (error) {

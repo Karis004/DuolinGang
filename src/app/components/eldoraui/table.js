@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const Table = React.forwardRef(({ className, ...props }, ref) => (
-    <div className="relative w-[80vw] h-[70vh] max-w-[350px] overflow-auto border-2 border-black bg-white p-4 transition-all dark:border-white dark:bg-zinc-800 shadow-[4px_4px_0_0_#000] hover:shadow-none">
+    <div className="flex flex-col w-[85vw] max-w-[450px] h-[70vh] overflow-auto border-2 border-black bg-white py-4 px-4 transition-all shadow-[4px_4px_0_0_#000] hover:shadow-none">
         <table
             ref={ref}
             className={cn("caption-bottom", className)}
@@ -12,11 +12,6 @@ const Table = React.forwardRef(({ className, ...props }, ref) => (
 ));
 Table.displayName = "Table";
 
-const TableHeader = React.forwardRef(({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
-));
-TableHeader.displayName = "TableHeader";
-
 const TableBody = React.forwardRef(({ className, ...props }, ref) => (
     <tbody
         ref={ref}
@@ -25,18 +20,6 @@ const TableBody = React.forwardRef(({ className, ...props }, ref) => (
     />
 ));
 TableBody.displayName = "TableBody";
-
-const TableFooter = React.forwardRef(({ className, ...props }, ref) => (
-    <tfoot
-        ref={ref}
-        className={cn(
-            "font-medium border-2 p-2 border-black transition-all dark:border-white dark:bg-zinc-800",
-            className
-        )}
-        {...props}
-    />
-));
-TableFooter.displayName = "TableFooter";
 
 const TableRow = React.forwardRef(({ className, ...props }, ref) => (
     <tr
@@ -50,47 +33,19 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
 ));
 TableRow.displayName = "TableRow";
 
-const TableHead = React.forwardRef(({ className, ...props }, ref) => (
-    <th
-        ref={ref}
-        className={cn(
-            "h-12 px-0.5 text-left align-middle font-bold [&:has([role=checkbox])]:pr-0 uppercase border-2 border-black transition-all dark:border-white dark:bg-zinc-800 ",
-            className
-        )}
-        {...props}
-    />
-));
-TableHead.displayName = "TableHead";
-
 const TableCell = React.forwardRef(({ className, ...props }, ref) => (
     <td
         ref={ref}
-        className={cn("px-1 py-5 align-middle [&:has([role=checkbox])]:pr-0", className)}
+        className={cn("px-1 py-3 w-[35vw] align-middle", className)}
         {...props}
     />
 ));
 TableCell.displayName = "TableCell";
 
-const TableCaption = React.forwardRef(({ className, ...props }, ref) => (
-    <caption
-        ref={ref}
-        className={cn(
-            "mt-2 text-sm text-muted-foreground",
-            "relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
-            className
-        )}
-        {...props}
-    />
-));
-TableCaption.displayName = "TableCaption";
 
 export {
     Table,
-    TableHeader,
     TableBody,
-    TableFooter,
-    TableHead,
     TableRow,
     TableCell,
-    TableCaption,
 };
