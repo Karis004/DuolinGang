@@ -18,24 +18,25 @@ export async function getWordsData({ limit = 500, filter = {} } = {}) {
     return data;
 }
 
-// 从 MongoDB 的 Dict 集合中搜索词语
+const { Converter } = require('opencc-js');
+const toTraditional = new Converter({ from: 'cn', to: 'hk' });
 async function searchAndFormatWord(word, db) {
     const dictCollection = db.collection('Dict');
-    // 使用 $exists 查询文档中是否存在以词语为字段名的键
-    const dictEntry = await dictCollection.findOne({ [word]: { $exists: true } });
+    const traditionalWord = toTraditional(word);
+    const dictEntry = await dictCollection.findOne({ [traditionalWord]: { $exists: true } });
 
-    if (dictEntry && dictEntry[word]) {
-        const wordData = dictEntry[word];
+    if (dictEntry && dictEntry[traditionalWord]) {
+        const wordData = dictEntry[traditionalWord];
         return {
-            pinyin: wordData.pinyin || '', // 发音
-            meaning: wordData.meanings || [], // 粤语含义（字符串数组）
-            examples: wordData.examples || [] // 例句（包含 yue 和 pinyin）
+            pinyin: wordData.pinyin || '',
+            meaning: wordData.meanings || [],
+            examples: wordData.examples || [], 
+            word: traditionalWord,
         };
     }
-    return null; // 未找到
+    return null;
 }
 
-// 插入词语数据到 MongoDB
 export async function insertWordData(wordData) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
@@ -57,18 +58,17 @@ export async function insertWordData(wordData) {
     // 如果在 Dict 集合中找到，覆盖 pinyin 和 meaning，添加 examples
     if (dictData) {
         dataToInsert = {
-            word: wordData.word,
-            pinyin: dictData.pinyin, // 使用 Dict 的发音
+            word: dictData.word,
+            pinyin: dictData.pinyin,
             meaning: wordData.meaning,
             meanings: dictData.meaning,
-            examples: dictData.examples, // 添加例句
+            examples: dictData.examples,
             times: wordData.times || 0,
         };
     }
 
-    // 插入到数据库
     const result = await collection.insertOne(dataToInsert);
-    return result; // 返回插入结果
+    return result; 
 }
 
 
@@ -101,11 +101,12 @@ export async function getRandomData({ limit = 5, filter = {} } = {}) {
 
 // search one word
 export async function searchOneWord(word) {
+    const decodedWord = decodeURIComponent(word);
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
 
-    const data = await collection.findOne({ word: word }, {
+    const data = await collection.findOne({ word: decodedWord }, {
         projection: {
             _id: 0,
             pinyin: 1,

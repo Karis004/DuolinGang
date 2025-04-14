@@ -5,6 +5,7 @@ import { Base, RedDiv, BlackDiv } from '../components/eldoraui/panel';
 import CantoneseTTS from '../components/CantoneseTTS';
 import DictDiv from '../components/DictDiv';
 import { useState, useEffect, useRef } from 'react';
+import Flashcard from '../components/Flashcard';
 
 export default function StudyPage() {
   const [wordsData, setWordsData] = useState([]);
@@ -78,25 +79,7 @@ export default function StudyPage() {
         </Button>
       ) : (
         <div className="answer">
-          <Base>
-            <RedDiv>
-              <p className="word text-3xl font-bold text-black p-1">
-                {currentWord.word}
-              </p>
-              <p className="pinyin text-xl text-gray-500 p-1">
-                {currentWord.pinyin}
-              </p>
-            </RedDiv>
-            <p className="meaning text-lg pt-5">{currentWord.meaning}</p>
-            <CantoneseTTS
-              ref={ttsRef}
-              text={currentWord.word}
-              className="m-5"
-            />
-            <BlackDiv>
-              <DictDiv currentWord={currentWord} />
-            </BlackDiv>
-          </Base>
+          <Flashcard currentWord={currentWord} />
           <Button
             onClick={handleCardClick}
             variant="white"

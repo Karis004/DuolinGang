@@ -13,9 +13,12 @@
     --foreground: #ededed;
   }
 }
+*/
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-} */
+*::-webkit-scrollbar {
+  display: none;
+}
