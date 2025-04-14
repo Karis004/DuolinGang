@@ -1,11 +1,17 @@
 import clientPromise from './mongodb';
 import bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongodb';
 
-// get all
-export async function getWordsData({ limit = 500, filter = {} } = {}) {
+// 修改获取单词数据函数，添加用户ID过滤
+export async function getWordsData({ limit = 500, filter = {}, userId = null } = {}) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
+
+    // 如果提供了用户ID，添加到过滤条件中
+    if (userId) {
+        filter.userId = userId;
+    }
 
     const data = await collection.find(filter, {
         projection: {
@@ -38,8 +44,8 @@ async function searchAndFormatWord(word, db) {
     return null;
 }
 
-// insert one
-export async function insertWordData(wordData) {
+// 修改insertWordData函数，添加用户ID
+export async function insertWordData(wordData, userId = null) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
@@ -55,6 +61,8 @@ export async function insertWordData(wordData) {
         meanings: "",
         examples: [],
         times: wordData.times || 0,
+        // 添加用户ID字段
+        userId: userId
     };
 
     // 如果在 Dict 集合中找到，覆盖 pinyin 和 meaning，添加 examples
@@ -66,6 +74,8 @@ export async function insertWordData(wordData) {
             meanings: dictData.meaning,
             examples: dictData.examples,
             times: wordData.times || 0,
+            // 添加用户ID字段
+            userId: userId
         };
     }
 
@@ -73,12 +83,16 @@ export async function insertWordData(wordData) {
     return result; 
 }
 
-
-// get random
-export async function getRandomData({ limit = 5, filter = {} } = {}) {
+// 修改随机获取单词函数，添加用户ID过滤
+export async function getRandomData({ limit = 5, filter = {}, userId = null } = {}) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
+
+    // 如果提供了用户ID，添加到过滤条件中
+    if (userId) {
+        filter.userId = userId;
+    }
 
     const data = await collection.find(filter, {
         projection: {
@@ -101,14 +115,19 @@ export async function getRandomData({ limit = 5, filter = {} } = {}) {
     return randomData;
 }
 
-// search one word
-export async function searchOneWord(word) {
+// 修改查找单个单词函数，增加用户ID验证
+export async function searchOneWord(word, userId = null) {
     const decodedWord = decodeURIComponent(word);
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
 
-    const data = await collection.findOne({ word: decodedWord }, {
+    const query = { word: decodedWord };
+    if (userId) {
+        query.userId = userId;
+    }
+
+    const data = await collection.findOne(query, {
         projection: {
             _id: 0,
             pinyin: 1,
@@ -176,10 +195,12 @@ export async function getUserByEmail(email) {
 export async function getUserById(id) {
     try {
         const client = await clientPromise;
-        const db = client.db("WordsBook");
+        const db = client.db();
         const collection = db.collection('users');
         
-        const user = await collection.findOne({ _id: id });
+        const objectId = typeof id === 'string' ? new ObjectId(id) : id;
+        const user = await collection.findOne({ _id: objectId });
+        
         if (user) {
             const { password, ...userWithoutPassword } = user;
             return userWithoutPassword;

@@ -2,18 +2,29 @@ import Button from "../components/eldoraui/button";
 import Input from "../components/eldoraui/input";
 import { insertWordData } from '../lib/dbUtils';
 import { redirect } from 'next/navigation';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../lib/auth";
 
 // 服务器端处理表单提交
 async function handleSubmit(formData) {
     'use server'; // 标记为服务器指令
+    
+    // 获取当前会话信息
+    const session = await getServerSession(authOptions);
+    if (!session) {
+        redirect('/login');
+    }
+    
     const wordData = {
         word: formData.get('word'),
         pinyin: formData.get('pinyin'),
         meaning: formData.get('meaning'),
         times: 0,
     };
-    await insertWordData(wordData);
-    redirect('/import'); // 提交后重定向到首页
+    
+    // 传递用户ID给insertWordData函数
+    await insertWordData(wordData, session.user.id);
+    redirect('/import'); // 提交后重定向到导入页面
 }
 
 export default function ImportPage() {

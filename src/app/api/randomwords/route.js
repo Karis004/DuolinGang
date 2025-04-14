@@ -1,7 +1,17 @@
 import clientPromise from '../../lib/mongodb';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../lib/auth';
 
 export async function GET(request) {
   try {
+    // 获取当前登录用户会话
+    const session = await getServerSession(authOptions);
+    
+    // 如果用户未登录，返回401错误
+    if (!session) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // 从查询参数中获取 limit 和 filter
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit')) || 5;
@@ -9,7 +19,9 @@ export async function GET(request) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
-    const filter = {};
+    
+    // 设置过滤条件，只获取当前登录用户的单词
+    const filter = { userId: session.user.id };
 
     const data = await collection.find(filter, {
       projection: {
@@ -23,6 +35,10 @@ export async function GET(request) {
       }
     }).toArray();
 
+    // 如果该用户没有单词，返回空数组
+    if (data.length === 0) {
+      return Response.json([]);
+    }
 
     data.sort((a, b) => a.times - b.times);
     const totalTimes = data.reduce((sum, item) => sum + item.times, 0);
