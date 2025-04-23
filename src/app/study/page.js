@@ -12,7 +12,7 @@ export default function StudyPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const ttsRef = useRef(null); // 用于引用 CantoneseTTS
+  const ttsRef = useRef(null); // Reference to CantoneseTTS component
 
   useEffect(() => {
     const fetchRandomWords = async () => {
@@ -36,7 +36,7 @@ export default function StudyPage() {
     fetchRandomWords();
   }, []);
 
-  // 监听 currentWord 和 showAnswer 变化，自动触发发音
+  // Listen for changes in currentWord and showAnswer, automatically trigger pronunciation
   const currentWord = wordsData[currentIndex];
   useEffect(() => {
     if (showAnswer && ttsRef.current && currentWord?.word) {

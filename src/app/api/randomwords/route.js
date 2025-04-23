@@ -4,15 +4,15 @@ import { authOptions } from '../../lib/auth';
 
 export async function GET(request) {
   try {
-    // 获取当前登录用户会话
+    // Get current logged-in user session
     const session = await getServerSession(authOptions);
     
-    // 如果用户未登录，返回401错误
+    // If user is not logged in, return 401 error
     if (!session) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 从查询参数中获取 limit 和 filter
+    // Get limit and filter from query parameters
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit')) || 5;
 
@@ -20,7 +20,7 @@ export async function GET(request) {
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
     
-    // 设置过滤条件，只获取当前登录用户的单词
+    // Set filter conditions, only get words for the current logged-in user
     const filter = { userId: session.user.id };
 
     const data = await collection.find(filter, {
@@ -35,7 +35,7 @@ export async function GET(request) {
       }
     }).toArray();
 
-    // 如果该用户没有单词，返回空数组
+    // If the user has no words, return an empty array
     if (data.length === 0) {
       return Response.json([]);
     }
@@ -44,7 +44,7 @@ export async function GET(request) {
     const totalTimes = data.reduce((sum, item) => sum + item.times, 0);
     const randomData = data.filter(item => Math.random() * totalTimes >= item.times).slice(0, limit);
 
-    // Fisher-Yates 洗牌算法
+    // Fisher-Yates shuffle algorithm
     for (let i = randomData.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [randomData[i], randomData[j]] = [randomData[j], randomData[i]];
@@ -53,7 +53,7 @@ export async function GET(request) {
     const updatePromises = randomData.map(item =>
       collection.updateOne(
         { _id: item._id },
-        { $inc: { times: 1 } }, // times属性加1
+        { $inc: { times: 1 } }, // Increment times property by 1
         { upsert: false }
       )
     );

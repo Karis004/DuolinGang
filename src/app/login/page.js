@@ -28,13 +28,13 @@ export default function LoginPage() {
       });
       
       if (result.error) {
-        setError('邮箱或密码错误');
+        setError('Invalid email or password');
       } else {
         router.push('/');
         router.refresh();
       }
     } catch (error) {
-      setError('登录失败，请重试');
+      setError('Login failed, please try again');
       console.error(error);
     } finally {
       setLoading(false);
@@ -42,9 +42,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center">
       <Panel>
-        <h1 className="text-2xl font-bold mb-6 text-center">登录</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
         
         {error && (
           <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
@@ -54,8 +54,8 @@ export default function LoginPage() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block mb-1 font-medium">
-              邮箱
+            <label htmlFor="email" className="block mb-1 font-medium text-left">
+              Email
             </label>
             <Input
               id="email"
@@ -69,8 +69,8 @@ export default function LoginPage() {
           </div>
           
           <div>
-            <label htmlFor="password" className="block mb-1 font-medium">
-              密码
+            <label htmlFor="password" className="block mb-1 font-medium text-left">
+              Password
             </label>
             <Input
               id="password"
@@ -89,15 +89,15 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
           >
-            {loading ? '登录中...' : '登录'}
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
         
         <div className="mt-4 text-center">
           <p>
-            还没有账号？{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="text-blue-500 hover:underline">
-              注册
+              Register
             </Link>
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function LoginPage() {
           size="sm"
           href="/"
         >
-          返回主页
+          Back to Home
         </Button>
       </Panel>
     </div>

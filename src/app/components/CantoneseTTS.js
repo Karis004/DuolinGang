@@ -24,7 +24,7 @@ const CantoneseTTS = forwardRef(({ text, className, iconSize = 32 }, ref) => {
         synth.speak(utterance);
     };
 
-    // 暴露 speak 方法给父组件
+    // Expose speak method to parent component
     useImperativeHandle(ref, () => ({
         speak: speakCantonese,
     }));

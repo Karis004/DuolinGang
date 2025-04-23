@@ -6,30 +6,30 @@ import { authOptions } from "../../lib/auth";
 import { redirect } from 'next/navigation';
 
 export default async function FlashcardPage({ params }) {
-    // 获取当前会话信息
+    // Get current session information
     const session = await getServerSession(authOptions);
     
-    // 如果用户未登录，重定向到登录页面
+    // If user is not logged in, redirect to login page
     if (!session) {
         redirect('/login?callbackUrl=/flashcard/' + params.word);
     }
     
     const { word } = params;
-    // 传递用户ID，只查找当前用户的单词
+    // Pass user ID, only search for current user's words
     const currentWord = await searchOneWord(word, session.user.id);
 
     if (!currentWord) {
         return (
             <div className="flex flex-col items-center justify-center">
                 <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
-                    单词未找到或不属于当前用户
+                    Word not found or does not belong to current user
                 </div>
                 <Button 
                     variant="brutal"
                     size="sm"
                     href="/list"
                 >
-                    返回单词列表
+                    Back to Word List
                 </Button>
             </div>
         );
@@ -39,7 +39,7 @@ export default async function FlashcardPage({ params }) {
         <div>
             <Flashcard currentWord={currentWord} />
             <Button
-                className="fixed bottom-12 left-3 m-4"
+                className="fixed bottom-12 left-8 m-4"
                 variant="brutal"
                 size="sm"
                 href="/list"

@@ -20,9 +20,9 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
     
-    // 简单验证
+    // Simple validation
     if (password !== confirmPassword) {
-      setError('两次输入的密码不一致');
+      setError('Passwords do not match');
       return;
     }
     
@@ -44,24 +44,23 @@ export default function RegisterPage() {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || '注册失败');
+        throw new Error(data.error || 'Registration failed');
       }
       
-      // 注册成功，跳转到登录页
+      // Registration successful, redirect to login page
       router.push('/login?registered=true');
     } catch (err) {
       setError(err.message);
-      console.error('注册错误:', err);
+      console.error('Registration error:', err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center">
       <Panel>
-        <h1 className="text-2xl font-bold mb-6 text-center">注册账号</h1>
-        
+        <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
         {error && (
           <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
             <p>{error}</p>
@@ -70,23 +69,23 @@ export default function RegisterPage() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block mb-1 font-medium">
-              用户名
+            <label htmlFor="name" className="block mb-1 font-medium text-left">
+              Username
             </label>
             <Input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="请输入用户名"
+              placeholder="Enter your username"
               required
               className="w-full"
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block mb-1 font-medium">
-              邮箱
+            <label htmlFor="email" className="block mb-1 font-medium text-left">
+              Email
             </label>
             <Input
               id="email"
@@ -100,8 +99,8 @@ export default function RegisterPage() {
           </div>
           
           <div>
-            <label htmlFor="password" className="block mb-1 font-medium">
-              密码
+            <label htmlFor="password" className="block mb-1 font-medium text-left">
+              Password
             </label>
             <Input
               id="password"
@@ -116,8 +115,8 @@ export default function RegisterPage() {
           </div>
           
           <div>
-            <label htmlFor="confirmPassword" className="block mb-1 font-medium">
-              确认密码
+            <label htmlFor="confirmPassword" className="block mb-1 font-medium text-left">
+              Confirm Password
             </label>
             <Input
               id="confirmPassword"
@@ -137,15 +136,15 @@ export default function RegisterPage() {
             type="submit"
             disabled={loading}
           >
-            {loading ? '注册中...' : '注册'}
+            {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
         
         <div className="mt-4 text-center">
           <p>
-            已有账号？{' '}
+            Already have an account?{' '}
             <Link href="/login" className="text-blue-500 hover:underline">
-              登录
+              Login
             </Link>
           </p>
         </div>
@@ -156,7 +155,7 @@ export default function RegisterPage() {
           size="sm"
           href="/"
         >
-          返回主页
+          Back to Home
         </Button>
       </Panel>
     </div>

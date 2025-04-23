@@ -5,18 +5,18 @@ export async function POST(req) {
   try {
     const { name, email, password } = await req.json();
 
-    // 简单验证
+    // Simple validation
     if (!name || !email || !password) {
       return NextResponse.json(
-        { error: "请提供所有必填字段" },
+        { error: "Please provide all required fields" },
         { status: 400 }
       );
     }
 
-    // 创建用户
+    // Create user
     const result = await createUser({ name, email, password });
 
-    // 处理错误
+    // Handle errors
     if (result.error) {
       return NextResponse.json(
         { error: result.error },
@@ -24,16 +24,16 @@ export async function POST(req) {
       );
     }
 
-    // 注册成功
+    // Registration successful
     return NextResponse.json({
-      message: "注册成功",
+      message: "Registration successful",
       user: result.user
     }, { status: 201 });
     
   } catch (error) {
-    console.error("注册失败:", error);
+    console.error("Registration failed:", error);
     return NextResponse.json(
-      { error: "注册失败" },
+      { error: "Registration failed" },
       { status: 500 }
     );
   }

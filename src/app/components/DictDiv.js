@@ -4,22 +4,22 @@ import CantoneseTTS from './CantoneseTTS';
 const DictDiv = ({ currentWord }) => {
   return (
     <div className="text-left">
-      {/* 渲染 meanings */}
+      {/* Render meanings */}
       <div className="p-1">
-        <p>词典释义：</p>
+        <p>Dictionary Definition:</p>
         {currentWord.meanings && currentWord.meanings.length > 0 ? (
           <p className="text-base text-gray-700">
             {currentWord.meanings.map((meaning, index) => `${meaning}`).join('；')}
           </p>
         ) : (
-          <p className="text-base text-gray-500 italic">暂无含义</p>
+          <p className="text-base text-gray-500 italic">No meanings available</p>
         )}
       </div>
 
-      {/* 渲染 examples */}
+      {/* Render examples */}
       <div className="p-1">
       <br></br>
-      <p>例句：</p>
+      <p>Examples:</p>
         {currentWord.examples && currentWord.examples.length > 0 ? (
           <ul className="mt-2 space-y-3">
             {currentWord.examples.map((example, index) => (
@@ -33,7 +33,7 @@ const DictDiv = ({ currentWord }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-base text-gray-500 italic">暂无例句</p>
+          <p className="text-base text-gray-500 italic">No examples available</p>
         )}
       </div>
     </div>

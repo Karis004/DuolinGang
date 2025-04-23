@@ -2,13 +2,13 @@ import clientPromise from './mongodb';
 import bcrypt from 'bcryptjs';
 import { ObjectId } from 'mongodb';
 
-// 修改获取单词数据函数，添加用户ID过滤
+// Modified getWordsData function, added user ID filter
 export async function getWordsData({ limit = 500, filter = {}, userId = null } = {}) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
 
-    // 如果提供了用户ID，添加到过滤条件中
+    // If userID is provided, add it to the filter conditions
     if (userId) {
         filter.userId = userId;
     }
@@ -44,16 +44,16 @@ async function searchAndFormatWord(word, db) {
     return null;
 }
 
-// 修改insertWordData函数，添加用户ID
+// Modified insertWordData function, added user ID
 export async function insertWordData(wordData, userId = null) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
 
-    // 尝试从 Dict 集合中搜索
+    // Try to search from Dict collection
     const dictData = await searchAndFormatWord(wordData.word, db);
 
-    // 准备插入的数据
+    // Prepare data to insert
     let dataToInsert = {
         word: wordData.word,
         pinyin: wordData.pinyin,
@@ -61,11 +61,11 @@ export async function insertWordData(wordData, userId = null) {
         meanings: "",
         examples: [],
         times: wordData.times || 0,
-        // 添加用户ID字段
+        // Add user ID field
         userId: userId
     };
 
-    // 如果在 Dict 集合中找到，覆盖 pinyin 和 meaning，添加 examples
+    // If found in Dict collection, override pinyin and meaning, add examples
     if (dictData) {
         dataToInsert = {
             word: dictData.word,
@@ -74,7 +74,7 @@ export async function insertWordData(wordData, userId = null) {
             meanings: dictData.meaning,
             examples: dictData.examples,
             times: wordData.times || 0,
-            // 添加用户ID字段
+            // Add user ID field
             userId: userId
         };
     }
@@ -83,13 +83,13 @@ export async function insertWordData(wordData, userId = null) {
     return result; 
 }
 
-// 修改随机获取单词函数，添加用户ID过滤
+// Modified function to get random words, added user ID filter
 export async function getRandomData({ limit = 5, filter = {}, userId = null } = {}) {
     const client = await clientPromise;
     const db = client.db('WordsBook');
     const collection = db.collection('Words');
 
-    // 如果提供了用户ID，添加到过滤条件中
+    // If userID is provided, add it to the filter conditions
     if (userId) {
         filter.userId = userId;
     }
@@ -115,7 +115,7 @@ export async function getRandomData({ limit = 5, filter = {}, userId = null } = 
     return randomData;
 }
 
-// 修改查找单个单词函数，增加用户ID验证
+// Modified function to search for a single word, added user ID verification
 export async function searchOneWord(word, userId = null) {
     const decodedWord = decodeURIComponent(word);
     const client = await clientPromise;
@@ -142,24 +142,24 @@ export async function searchOneWord(word, userId = null) {
     return data;
 }
 
-// 用户相关函数
+// User-related functions
 export async function createUser(userData) {
     try {
         const client = await clientPromise;
         const db = client.db("WordsBook");
         const collection = db.collection('users');
 
-        // 检查用户是否已存在
+        // Check if user already exists
         const existingUser = await collection.findOne({ email: userData.email });
         if (existingUser) {
-            return { error: '用户已存在' };
+            return { error: 'User already exists' };
         }
 
-        // 加密密码
+        // Encrypt password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(userData.password, salt);
 
-        // 创建用户对象
+        // Create user object
         const newUser = {
             name: userData.name,
             email: userData.email,
@@ -167,15 +167,15 @@ export async function createUser(userData) {
             createdAt: new Date()
         };
 
-        // 保存用户
+        // Save user
         const result = await collection.insertOne(newUser);
         
-        // 返回不含密码的用户信息
+        // Return user info without password
         const { password, ...userWithoutPassword } = newUser;
         return { user: userWithoutPassword };
     } catch (error) {
-        console.error('创建用户出错:', error);
-        return { error: '创建用户失败' };
+        console.error('Error creating user:', error);
+        return { error: 'Failed to create user' };
     }
 }
 
@@ -187,7 +187,7 @@ export async function getUserByEmail(email) {
         
         return await collection.findOne({ email });
     } catch (error) {
-        console.error('获取用户信息失败:', error);
+        console.error('Failed to get user information:', error);
         return null;
     }
 }
@@ -207,7 +207,7 @@ export async function getUserById(id) {
         }
         return null;
     } catch (error) {
-        console.error('获取用户信息失败:', error);
+        console.error('Failed to get user information:', error);
         return null;
     }
 }

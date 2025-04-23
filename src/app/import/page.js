@@ -5,11 +5,11 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../lib/auth";
 
-// 服务器端处理表单提交
+// Server-side form submission handling
 async function handleSubmit(formData) {
-    'use server'; // 标记为服务器指令
+    'use server'; // Mark as server action
     
-    // 获取当前会话信息
+    // Get current session information
     const session = await getServerSession(authOptions);
     if (!session) {
         redirect('/login');
@@ -22,15 +22,16 @@ async function handleSubmit(formData) {
         times: 0,
     };
     
-    // 传递用户ID给insertWordData函数
+    // Pass user ID to insertWordData function
     await insertWordData(wordData, session.user.id);
-    redirect('/import'); // 提交后重定向到导入页面
+    redirect('/import'); // Redirect to import page after submission
 }
 
 export default function ImportPage() {
     return (
-        <main className='space-y-2.5'>
-            <form action={handleSubmit}>
+        <main className="mb-20">
+            <h1 className="text-2xl font-bold mb-6 text-center">Add Word</h1>
+            <form action={handleSubmit} className='space-y-3'>
                 <Input type="text" name="word" placeholder="Word" required />
                 <Input type="text" name="pinyin" placeholder="Pinyin" required />
                 <Input type="text" name="meaning" placeholder="Meaning" required />

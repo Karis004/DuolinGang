@@ -8,6 +8,11 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const isLoading = status === 'loading';
 
+  // 获取用户名首字母的函数
+  const getInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : '?';
+  };
+
   return (
     <nav className="flex justify-between items-center px-4 py-3 bg-white shadow-md">
       <div>
@@ -21,22 +26,27 @@ export default function Navbar() {
           <div className="animate-pulse h-8 w-20 bg-gray-200 rounded"></div>
         ) : session ? (
           <div className="flex items-center space-x-4">
-            <span className="hidden md:inline">你好，{session.user.name}</span>
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-medium">
+                {getInitial(session.user.name)}
+              </div>
+              <span className="ml-2 hidden md:inline">{session.user.name}</span>
+            </div>
             <Button 
               variant="white" 
               size="sm"
               onClick={() => signOut({ callbackUrl: '/' })}
             >
-              退出登录
+              Sign Out
             </Button>
           </div>
         ) : (
           <div className="space-x-2">
             <Link href="/login">
-              <Button variant="white" size="sm">登录</Button>
+              <Button variant="white" size="sm">Login</Button>
             </Link>
             <Link href="/register">
-              <Button variant="brutal" size="sm">注册</Button>
+              <Button variant="brutal" size="sm">Register</Button>
             </Link>
           </div>
         )}

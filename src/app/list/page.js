@@ -12,22 +12,21 @@ import { authOptions } from "../lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function DataPage() {
-    // 获取当前会话信息
+    // Get current session information
     const session = await getServerSession(authOptions);
     
-    // 如果用户未登录，重定向到登录页面
+    // If user is not logged in, redirect to login page
     if (!session) {
         redirect('/login?callbackUrl=/list');
     }
     
-    // 获取当前用户的单词列表
+    // Get word list for current user
     const data = await getWordsData({ userId: session.user.id });
 
     return (
         <main>
             {data.length > 0 ? (
                 <>
-                    <h1 className="text-2xl font-bold mb-4">我的词汇表</h1>
                     <Table>
                         <TableBody>
                             {data.map((item, index) => (
@@ -54,8 +53,8 @@ export default async function DataPage() {
                 </>
             ) : (
                 <div className="text-center p-6">
-                    <p className="mb-4">你还没有添加任何单词</p>
-                    <Button href="/import" variant="brutal">添加新单词</Button>
+                    <p className="mb-4">You haven&apos;t added any words yet</p>
+                    <Button href="/import" variant="brutal">Add New Words</Button>
                 </div>
             )}
             <Button
