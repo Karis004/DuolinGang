@@ -29,7 +29,7 @@ async function handleSubmit(formData) {
 
 export default function ImportPage() {
     return (
-        <main className="mb-20">
+        <main>
             <h1 className="text-2xl font-bold mb-6 text-center">Add Word</h1>
             <form action={handleSubmit} className='space-y-3'>
                 <Input type="text" name="word" placeholder="Word" required />

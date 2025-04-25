@@ -57,14 +57,14 @@ export default async function DataPage() {
                     <Button href="/import" variant="brutal">Add New Words</Button>
                 </div>
             )}
-            <Button
+            {/* <Button
                 className="fixed bottom-12 left-8 m-4"
                 variant="brutal"
                 size="sm"
                 href="/"
             >
                 Back
-            </Button>
+            </Button> */}
         </main>
     );
 }

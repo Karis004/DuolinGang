@@ -1,13 +1,13 @@
 # DuolinGang
-
-DuolinGang is a web platform for learning Cantonese.
+A Cantonese Learning Website
 
 ## Features
 
-- Record and review Cantonese words with flashcards
-- Access definitions and example sentences from words.hk
-- Hear accurate Cantonese pronunciation using Web Speech API
-- Responsive design for all devices
+- Flashcard memorization and review
+- Definitions and example sentences from words.hk
+- Cantonese pronunciation support
+- User authentication system
+- Personal vocabulary management
 
 ## Tech Stack
 
@@ -15,4 +15,4 @@ DuolinGang is a web platform for learning Cantonese.
 - Tailwind CSS
 - Web Speech API
   
-![DuolinGang Screenshot](public/images/bird.png)
+<img src="public/images/bird.png" alt="DuolinGang" width="400">

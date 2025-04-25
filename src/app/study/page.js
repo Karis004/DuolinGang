@@ -93,14 +93,14 @@ export default function StudyPage() {
       <div className="progress mt-4">
         {currentIndex + 1} / {wordsData.length}
       </div>
-      <Button
+      {/* <Button
         className="fixed bottom-10 left-3 m-4"
         variant="brutal"
         size="sm"
         href="/"
       >
         Back
-      </Button>
+      </Button> */}
     </div>
   );
 }

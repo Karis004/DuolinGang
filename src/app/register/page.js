@@ -19,15 +19,15 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     // Simple validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -40,13 +40,13 @@ export default function RegisterPage() {
           password,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || 'Registration failed');
       }
-      
+
       // Registration successful, redirect to login page
       router.push('/login?registered=true');
     } catch (err) {
@@ -59,14 +59,14 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <Panel>
-        <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+      <Panel className="h-[65vh] mt-5">
+        <h1 className="text-2xl font-bold mb-2 text-center">Register</h1>
         {error && (
           <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
             <p>{error}</p>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="name" className="block mb-1 font-medium text-left">
@@ -82,7 +82,7 @@ export default function RegisterPage() {
               className="w-full"
             />
           </div>
-          
+
           <div>
             <label htmlFor="email" className="block mb-1 font-medium text-left">
               Email
@@ -97,7 +97,7 @@ export default function RegisterPage() {
               className="w-full"
             />
           </div>
-          
+
           <div>
             <label htmlFor="password" className="block mb-1 font-medium text-left">
               Password
@@ -113,7 +113,7 @@ export default function RegisterPage() {
               className="w-full"
             />
           </div>
-          
+
           <div>
             <label htmlFor="confirmPassword" className="block mb-1 font-medium text-left">
               Confirm Password
@@ -129,17 +129,17 @@ export default function RegisterPage() {
               className="w-full"
             />
           </div>
-          
-          <Button 
-            variant="brutal" 
-            className="w-full" 
+
+          <Button
+            variant="brutal"
+            className="w-full"
             type="submit"
             disabled={loading}
           >
             {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
-        
+
         <div className="mt-4 text-center">
           <p>
             Already have an account?{' '}
@@ -148,16 +148,15 @@ export default function RegisterPage() {
             </Link>
           </p>
         </div>
-        
+      </Panel>
         <Button
-          className="mt-6"
+          className="mt-6 w-full"
           variant="white"
           size="sm"
           href="/"
         >
           Back to Home
         </Button>
-      </Panel>
     </div>
   );
 }

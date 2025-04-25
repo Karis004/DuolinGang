@@ -38,14 +38,14 @@ export default async function FlashcardPage({ params }) {
     return (
         <div>
             <Flashcard currentWord={currentWord} />
-            <Button
+            {/* <Button
                 className="fixed bottom-12 left-8 m-4"
                 variant="brutal"
                 size="sm"
                 href="/list"
             >
                 Back
-            </Button>
+            </Button> */}
         </div>
     );
 }

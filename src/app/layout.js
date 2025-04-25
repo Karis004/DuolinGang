@@ -14,7 +14,7 @@ export default function Layout({ children }) {
       <body className="flex flex-col h-[90vh] bg-white bg-[radial-gradient(#e5e7eb_2px,transparent_2px)] [background-size:19px_19px]">
         <SessionProvider>
           <Navbar />
-          <main className="flex flex-col justify-center items-center flex-grow text-center gap-5">
+          <main className="flex flex-col mb-11 justify-center items-center flex-grow text-center gap-5">
             {children}
           </main>
         </SessionProvider>

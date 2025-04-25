@@ -44,7 +44,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center">
       <Panel>
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+        <h1 className="text-2xl font-bold mb-2 text-center">Login</h1>
         
         {error && (
           <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
@@ -102,15 +102,15 @@ export default function LoginPage() {
           </p>
         </div>
         
+      </Panel>
         <Button
-          className="mt-6"
+          className="mt-6 w-full"
           variant="white"
           size="sm"
           href="/"
         >
           Back to Home
         </Button>
-      </Panel>
     </div>
   );
 }
