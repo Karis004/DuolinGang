@@ -77,7 +77,7 @@ export default function Navbar() {
                   <Link href="https://github.com/Karis004/DuolinGang" className="">
                   Github
                   </Link>
-                    <div className="text-xs text-gray-400">v1.0.0</div>
+                    <div className="text-xs text-gray-400">v1.1.0</div>
                   </div>
                 </div>
                 <button
