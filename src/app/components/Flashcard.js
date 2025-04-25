@@ -7,10 +7,15 @@ import { useEffect, useRef } from 'react';
 
 export default function Flashcard({ currentWord }) {
     const ttsRef = useRef(null);
-
+    const hasSpeakenRef = useRef({});
+    
     useEffect(() => {
-        if (currentWord && ttsRef.current) {
-            ttsRef.current.speak(currentWord.word);
+        if (currentWord && ttsRef.current && !hasSpeakenRef.current[currentWord.word]) {
+            // 使用 setTimeout 防止多次调用
+            setTimeout(() => {
+                ttsRef.current.speak(currentWord.word);
+                hasSpeakenRef.current[currentWord.word] = true;
+            }, 0);
         }
     }, [currentWord]);
 
