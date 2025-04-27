@@ -1,53 +1,65 @@
 'use client';
 
-import { useState, forwardRef, useImperativeHandle } from 'react';
+import { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import Image from 'next/image';
 import { cn } from '../lib/utils';
-import * as speechSDK from 'microsoft-cognitiveservices-speech-sdk';
 
 const CantoneseTTS = forwardRef(({ text, className, iconSize = 32 }, ref) => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const audioRef = useRef(null);
     
-    // 使用 Azure 语音服务进行文本转语音
-    const speakCantonese = (textToSpeak = text) => {
+    // 使用服务器API进行文本转语音
+    const speakCantonese = async (textToSpeak = text) => {
         if (isPlaying) return;
         
         try {
             setIsPlaying(true);
             
-            // 创建语音配置
-            const speechConfig = speechSDK.SpeechConfig.fromSubscription(
-                process.env.NEXT_PUBLIC_AZURE_SPEECH_KEY, 
-                process.env.NEXT_PUBLIC_AZURE_SPEECH_REGION
-            );
-            // 直接在组件中设置语音模型
-            speechConfig.speechSynthesisVoiceName = "zh-HK-HiuMaanNeural";
-            
-            // 创建语音合成器
-            const synthesizer = new speechSDK.SpeechSynthesizer(speechConfig);
-            
-            // 开始合成并播放
-            synthesizer.speakTextAsync(
-                textToSpeak,
-                result => {
-                    // 合成完成的回调
-                    if (result.reason === speechSDK.ResultReason.SynthesizingAudioCompleted) {
-                        console.log("Azure TTS synthesis completed");
-                    } else {
-                        console.error("Azure TTS synthesis canceled, " + result.errorDetails);
-                    }
-                    synthesizer.close();
-                    setIsPlaying(false);
+            // 调用服务器API获取音频数据
+            const response = await fetch('/api/tts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                error => {
-                    // 发生错误的回调
-                    console.error("Azure TTS error: " + error);
-                    synthesizer.close();
+                body: JSON.stringify({ text: textToSpeak }),
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '语音合成失败');
+            }
+            
+            // 获取音频二进制数据
+            const audioBlob = await response.blob();
+            
+            // 创建一个音频URL
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            // 创建或重用音频元素
+            if (!audioRef.current) {
+                audioRef.current = new Audio();
+                
+                // 音频播放结束后的处理
+                audioRef.current.onended = () => {
                     setIsPlaying(false);
-                }
-            );
+                };
+                
+                // 音频播放错误处理
+                audioRef.current.onerror = (e) => {
+                    console.error("音频播放错误:", e);
+                    setIsPlaying(false);
+                };
+            }
+            
+            // 设置音频来源并播放
+            audioRef.current.src = audioUrl;
+            
+            // 播放音频
+            await audioRef.current.play();
+            
+            console.log("TTS 播放开始");
         } catch (error) {
-            console.error("Azure TTS setup error:", error);
+            console.error("TTS 错误:", error);
             setIsPlaying(false);
         }
     };

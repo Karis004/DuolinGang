@@ -3,21 +3,20 @@
 import { Base, RedDiv, BlackDiv } from './eldoraui/panel';
 import CantoneseTTS from './CantoneseTTS';
 import DictDiv from './DictDiv';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
-export default function Flashcard({ currentWord }) {
+// 使用forwardRef包装组件，这样父组件可以获取对TTS组件的引用
+const Flashcard = forwardRef(({ currentWord }, ref) => {
     const ttsRef = useRef(null);
-    const hasSpeakenRef = useRef({});
     
-    useEffect(() => {
-        if (currentWord && ttsRef.current && !hasSpeakenRef.current[currentWord.word]) {
-            // 使用 setTimeout 防止多次调用
-            setTimeout(() => {
-                ttsRef.current.speak(currentWord.word);
-                hasSpeakenRef.current[currentWord.word] = true;
-            }, 0);
+    // 将tts的speak方法暴露给父组件
+    useImperativeHandle(ref, () => ({
+        speak: (text) => {
+            if (ttsRef.current) {
+                ttsRef.current.speak(text || currentWord.word);
+            }
         }
-    }, [currentWord]);
+    }));
 
     if (!currentWord) {
         return <div>Loading...</div>;
@@ -43,4 +42,8 @@ export default function Flashcard({ currentWord }) {
             </BlackDiv>
         </Base>
     );
-}
+});
+
+Flashcard.displayName = 'Flashcard';
+
+export default Flashcard;

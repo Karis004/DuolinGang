@@ -2,7 +2,6 @@
 
 import Button from '../components/eldoraui/button';
 import { Base, RedDiv, BlackDiv } from '../components/eldoraui/panel';
-import CantoneseTTS from '../components/CantoneseTTS';
 import DictDiv from '../components/DictDiv';
 import { useState, useEffect, useRef } from 'react';
 import Flashcard from '../components/Flashcard';
@@ -12,7 +11,7 @@ export default function StudyPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const ttsRef = useRef(null); // Reference to CantoneseTTS component
+  const flashcardRef = useRef(null); // 改为引用Flashcard组件
 
   useEffect(() => {
     const fetchRandomWords = async () => {
@@ -36,11 +35,16 @@ export default function StudyPage() {
     fetchRandomWords();
   }, []);
 
-  // Listen for changes in currentWord and showAnswer, automatically trigger pronunciation
+  // 监听当前单词和showAnswer变化，自动触发发音
   const currentWord = wordsData[currentIndex];
   useEffect(() => {
-    if (showAnswer && ttsRef.current && currentWord?.word) {
-      ttsRef.current.speak();
+    if (showAnswer && flashcardRef.current && currentWord?.word) {
+      // 使用短暂延迟确保组件已完全渲染
+      const timer = setTimeout(() => {
+        flashcardRef.current.speak();
+      }, 10);
+      
+      return () => clearTimeout(timer);
     }
   }, [currentWord, showAnswer]);
 
@@ -79,7 +83,7 @@ export default function StudyPage() {
         </Button>
       ) : (
         <div className="answer">
-          <Flashcard currentWord={currentWord} />
+          <Flashcard ref={flashcardRef} currentWord={currentWord} />
           <Button
             onClick={handleCardClick}
             variant="white"
@@ -93,14 +97,6 @@ export default function StudyPage() {
       <div className="progress mt-4">
         {currentIndex + 1} / {wordsData.length}
       </div>
-      {/* <Button
-        className="fixed bottom-10 left-3 m-4"
-        variant="brutal"
-        size="sm"
-        href="/"
-      >
-        Back
-      </Button> */}
     </div>
   );
 }
