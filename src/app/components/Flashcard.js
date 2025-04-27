@@ -3,13 +3,13 @@
 import { Base, RedDiv, BlackDiv } from './eldoraui/panel';
 import CantoneseTTS from './CantoneseTTS';
 import DictDiv from './DictDiv';
-import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useRef, forwardRef, useImperativeHandle } from 'react';
 
-// 使用forwardRef包装组件，这样父组件可以获取对TTS组件的引用
+// Component wrapped with forwardRef so parent can access the TTS functionality
 const Flashcard = forwardRef(({ currentWord }, ref) => {
     const ttsRef = useRef(null);
     
-    // 将tts的speak方法暴露给父组件
+    // Expose speak method to parent component
     useImperativeHandle(ref, () => ({
         speak: (text) => {
             if (ttsRef.current) {
@@ -21,6 +21,7 @@ const Flashcard = forwardRef(({ currentWord }, ref) => {
     if (!currentWord) {
         return <div>Loading...</div>;
     }
+    
     return (
         <Base>
             <RedDiv>

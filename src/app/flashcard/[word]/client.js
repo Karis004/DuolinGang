@@ -4,17 +4,15 @@ import Flashcard from '../../components/Flashcard';
 import Button from '../../components/eldoraui/button';
 import { useEffect, useRef } from 'react';
 
-// 客户端组件来包装服务端获取的数据
+// Client component to wrap server-fetched data
 export default function FlashcardClient({ currentWord }) {
     const flashcardRef = useRef(null);
     
-    // 当组件挂载或单词变化时播放语音
+    // Play audio when component mounts or word changes
     useEffect(() => {
         if (flashcardRef.current && currentWord) {
-            console.log('1');
-            // 短暂延迟，确保组件完全渲染
+            // Short delay to ensure component is fully rendered
             const timer = setTimeout(() => {
-                console.log('2');
                 flashcardRef.current.speak();
             }, 10);
             

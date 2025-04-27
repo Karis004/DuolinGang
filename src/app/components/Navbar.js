@@ -11,12 +11,10 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // 获取用户名首字母的函数
-  const getInitial = (name) => {
-    return name ? name.charAt(0).toUpperCase() : '?';
-  };
+  // Get the initial letter of user's name
+  const getInitial = (name) => name ? name.charAt(0).toUpperCase() : '?';
 
-  // 点击头像外部时关闭菜单
+  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -25,18 +23,14 @@ export default function Navbar() {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
     <nav className="flex justify-between items-center px-4 py-3 bg-white shadow-md">
-      <div>
-        <Link href="/" className="font-bold text-xl">
-          DuolinGang
-        </Link>
-      </div>
+      <Link href="/" className="font-bold text-xl">
+        DuolinGang
+      </Link>
       
       <div>
         {isLoading ? (
@@ -74,9 +68,9 @@ export default function Navbar() {
                 </Link>
                 <div className="border-t border-gray-100 mt-1 pt-1">
                   <div className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer">
-                  <Link href="https://github.com/Karis004/DuolinGang" className="">
-                  Github
-                  </Link>
+                    <Link href="https://github.com/Karis004/DuolinGang">
+                      Github
+                    </Link>
                     <div className="text-xs text-gray-400">v1.1.0</div>
                   </div>
                 </div>
